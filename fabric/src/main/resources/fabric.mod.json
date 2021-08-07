@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "MOD_ID_HERE",
+  "version": "${version}",
+  "name": "MOD_NAME_HERE",
+  "description": "",
+  "authors": [
+    "Thonk"
+  ],
+  "contact": {},
+  "license": "LGPL-3.0",
+  "icon": "assets/MOD_ID/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "MOD_ID_CLIENT"
+    ],
+    "main": [
+      "MOD_ID_INIT"
+    ]
+  },
+  "mixins": [
+    "MOD_ID.mixins.json"
+  ],
+    
+  "depends": {
+    "fabricloader": ">=0.11.6",
+    "fabric": "*",
+    "minecraft": "1.17"
+  }
+}

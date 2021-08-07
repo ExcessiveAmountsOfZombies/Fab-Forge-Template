@@ -1,0 +1,18 @@
+allprojects {
+    version = mod_version
+    group = maven_group
+
+    configurations {
+        compileClasspath
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+    //apply plugin: 'maven'
+    apply plugin: 'idea'
+
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
+}

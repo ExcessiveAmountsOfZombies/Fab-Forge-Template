@@ -1,0 +1,127 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://sizableshrimp.me/maven' }
+        //maven { url= 'https://repo.spongepowered.org/repository/maven-public/' }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath group: 'me.sizableshrimp.parchmenttest', name: 'ForgeGradle', version: '5.1+', changing: true
+        classpath 'gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0'
+        //classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'net.minecraftforge.gradle'
+//apply plugin: 'org.spongepowered.mixin'
+
+repositories {
+
+}
+
+archivesBaseName = archives_base_name + "-" + mc_ver + "-FORGE"
+
+configurations {
+    shade
+    compileOnly.extendsFrom shade
+    compileOnly.extendsFrom shadeSource
+}
+
+
+/*mixin {
+    add sourceSets.main, "MOD_ID.refmap.json"
+}*/
+
+minecraft {
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    mappings channel: 'parchment', version: '2021.07.27-1.17.1'
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'legacyClassPath', '{minecraft_classpath}'
+            //arg "-mixin.config=MOD_ID.mixins.json"
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // Recommended logging level for the console //property 'forge.logging.console.level', 'debug'
+            mods {
+                MOD_ID {
+                    sources (sourceSets.main, project(":common").sourceSets.main)
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                MOD_ID {
+                    sources (sourceSets.main, project(":common").sourceSets.main)
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'legacyClassPath', '{minecraft_classpath}'
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+            args '--mod', 'MOD_ID', '--all', '--output', file('src/generated/resources/'), '--existing', project(":common").file('src/main/resources/')
+            mods {
+                MOD_ID {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+//tasks.processResources.dependsOn(project(":common").tasks.processResources)
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.19'
+    implementation project(":common")
+    shade project(":common")
+    //annotationProcessor 'org.spongepowered:mixin:0.8:processor'
+}
+
+shadowJar {
+    enabled = true
+    configurations = [project.configurations.shade]
+    exclude 'loom.*'
+}
+
+artifacts {
+    archives shadowJar
+    shadow shadowJar
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title": "MOD_ID_HERE",
+                "Specification-Vendor": "thonk",
+                "Specification-Version": "1",
+                "Implementation-Title": "${archives_base_name}",
+                "Implementation-Version": "${mod_version}",
+                "Implementation-Vendor" :"me thonk",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs": "MOD_ID_HERE.mixins.json"
+        ])
+    }
+}
+
+shadowJar.finalizedBy('reobfJar')

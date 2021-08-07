@@ -1,0 +1,33 @@
+plugins {
+    id 'fabric-loom' version '0.9-SNAPSHOT'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'maven-publish'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "ldtteam"
+        url = "https://maven.parchmentmc.net/"
+    }
+}
+
+
+minecraft {
+    accessWidenerPath = file("src/main/resources/{MOD_ID}.accesswidener")
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${rootProject.mc_ver}"
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.17.1:2021.07.26-nightly-SNAPSHOT@zip")
+    }
+
+    // https://github.com/FabricMC/fabric-loom/issues/456 keep an eye on this issue
+    annotationProcessor "org.ow2.asm:asm:${project.asm_version}"
+    annotationProcessor "org.ow2.asm:asm-analysis:${project.asm_version}"
+    annotationProcessor "org.ow2.asm:asm-commons:${project.asm_version}"
+    annotationProcessor "org.ow2.asm:asm-tree:${project.asm_version}"
+    annotationProcessor "org.ow2.asm:asm-util:${project.asm_version}"
+}

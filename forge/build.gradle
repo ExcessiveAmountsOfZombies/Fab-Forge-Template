@@ -76,7 +76,7 @@ minecraft {
             args '--mod', 'MOD_ID', '--all', '--output', file('src/generated/resources/'), '--existing', project(":common").file('src/main/resources/')
             mods {
                 MOD_ID {
-                    source sourceSets.main
+                    sources (sourceSets.main, project(":common").sourceSets.main)
                 }
             }
         }
@@ -84,6 +84,13 @@ minecraft {
 }
 
 processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include "pack.mcmeta"
+        include "mods.toml"
+        expand "version": rootProject.version
+        expand "id": rootProject.mod_id
+        expand "name": rootProject.archives_base_name
+    }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
@@ -113,11 +120,11 @@ jar {
     manifest {
         attributes([
                 "Specification-Title": "MOD_ID_HERE",
-                "Specification-Vendor": "thonk",
+                "Specification-Vendor": "Thonk",
                 "Specification-Version": "1",
                 "Implementation-Title": "${archives_base_name}",
                 "Implementation-Version": "${mod_version}",
-                "Implementation-Vendor" :"me thonk",
+                "Implementation-Vendor" :"Thonk",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 "MixinConfigs": "MOD_ID_HERE.mixins.json"
         ])

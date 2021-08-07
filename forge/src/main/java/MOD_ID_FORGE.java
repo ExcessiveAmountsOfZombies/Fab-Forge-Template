@@ -10,6 +10,7 @@ import org.openjdk.nashorn.internal.ir.Block;
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("MOD_ID_HERE")
 public class MOD_ID_FORGE {
+    // move to a package when creating
     private static final Logger LOGGER = LogManager.getLogger();
 
     public MOD_ID_FORGE() {

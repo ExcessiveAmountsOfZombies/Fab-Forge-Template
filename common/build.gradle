@@ -14,7 +14,7 @@ repositories {
 
 
 minecraft {
-    accessWidenerPath = file("src/main/resources/{MOD_ID}.accesswidener")
+    accessWidenerPath = file("src/main/resources/MOD_ID.accesswidener")
 }
 
 dependencies {
